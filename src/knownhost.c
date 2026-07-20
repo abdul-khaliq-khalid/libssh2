@@ -722,10 +722,10 @@ static int knownhost_line_hashed(LIBSSH2_KNOWNHOSTS *hosts,
     hostlen -= 3; /* deduct the marker */
 
     /* this is where the salt starts, find the end of it */
-    for(p = salt; *p && *p != '|'; p++)
+    for(p = salt; (size_t)(p - salt) < hostlen && *p && *p != '|'; p++)
         ;
 
-    if(*p == '|') {
+    if((size_t)(p - salt) < hostlen && *p == '|') {
         const char *hash = NULL;
         size_t saltlen = p - salt;
         if(saltlen >= (sizeof(saltbuf) - 1)) /* weird length */
